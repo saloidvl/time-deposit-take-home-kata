@@ -15,6 +15,6 @@ class OpenApiContractTest extends BaseApiTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         getContentFromFile("e2e/openapi/response/api-docs.json"),
-                        JsonCompareMode.STRICT)); // strict: an extra operation or field fails the test (D6, D12)
+                        JsonCompareMode.STRICT));
     }
 }

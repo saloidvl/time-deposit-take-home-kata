@@ -13,16 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Base for API tests: real Spring context, MockMvc and PostgreSQL in Testcontainers (D15).
- * All API tests must share this one context: Database Rider keeps the first connection it gets,
- * so a test with its own context configuration would load its dataset into another database.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
 @DBRider
-// The camelCase table and column names are quoted identifiers in PostgreSQL (D11).
 @DBUnit(caseSensitiveTableNames = true, escapePattern = "\"?\"")
 public abstract class BaseApiTest {
 

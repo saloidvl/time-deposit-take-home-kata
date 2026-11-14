@@ -11,6 +11,5 @@ public interface TimeDepositRepository {
 
     List<TimeDepositDetails> findAllWithWithdrawals();
 
-    /** Writes only the balance of each deposit, matched by id. */
     void updateBalances(List<TimeDeposit> deposits);
 }
