@@ -37,7 +37,7 @@ public class TimeDepositController {
     @ApiResponse(responseCode = "200", description = "All time deposits")
     @GetMapping(value = "/time-deposits", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TimeDepositResponse> getAll() {
-        return service.getAll().stream().map(TimeDepositResponseMapper::toResponse).toList();
+        return service.getAll().stream().map(TimeDepositApiMapper::toResponse).toList();
     }
 
     // No body in or out, and not idempotent: every call accrues one more month (A3, D23).

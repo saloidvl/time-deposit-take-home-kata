@@ -4,12 +4,13 @@ import org.ikigaidigital.TimeDeposit;
 import org.ikigaidigital.adapter.controller.dto.TimeDepositResponse;
 import org.ikigaidigital.adapter.controller.dto.WithdrawalResponse;
 import org.ikigaidigital.domain.model.TimeDepositDetails;
+import org.ikigaidigital.domain.model.Withdrawal;
 
 import java.math.BigDecimal;
 
-final class TimeDepositResponseMapper {
+final class TimeDepositApiMapper {
 
-    private TimeDepositResponseMapper() {
+    private TimeDepositApiMapper() {
     }
 
     static TimeDepositResponse toResponse(TimeDepositDetails details) {
@@ -17,11 +18,12 @@ final class TimeDepositResponseMapper {
         return new TimeDepositResponse(
                 deposit.getId(),
                 deposit.getPlanType(),
-                // double to BigDecimal only at the boundary, shortest decimal form (D7).
                 BigDecimal.valueOf(deposit.getBalance()),
                 deposit.getDays(),
-                details.withdrawals().stream()
-                        .map(w -> new WithdrawalResponse(w.id(), w.amount(), w.date()))
-                        .toList());
+                details.withdrawals().stream().map(TimeDepositApiMapper::toResponse).toList());
+    }
+
+    private static WithdrawalResponse toResponse(Withdrawal withdrawal) {
+        return new WithdrawalResponse(withdrawal.id(), withdrawal.amount(), withdrawal.date());
     }
 }
