@@ -1,0 +1,14 @@
+{
+  "timeDeposits": [
+    {"id": 1, "planType": "basic", "days": 40, "balance": "1000.83"},
+    {"id": 2, "planType": "student", "days": 100, "balance": "2005.00"},
+    {"id": 3, "planType": "premium", "days": 90, "balance": "3012.50"},
+    {"id": 4, "planType": "basic", "days": 30, "balance": "500.00"},
+    {"id": 5, "planType": "student", "days": 366, "balance": "800.00"},
+    {"id": 6, "planType": "premium", "days": 45, "balance": "900.00"},
+    {"id": 7, "planType": "gold", "days": 100, "balance": "100.00"},
+    {"id": 8, "planType": "Basic", "days": 100, "balance": "700.00"},
+    {"id": 9, "planType": "basic", "days": 60, "balance": "1000.955"}
+  ],
+  "withdrawals": []
+}

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: time-deposit
+  jackson:
+    generator:
+      write-bigdecimal-as-plain: true
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/timedeposit}
+    username: ${DB_USERNAME:timedeposit}
+    password: ${DB_PASSWORD:timedeposit}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
