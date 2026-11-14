@@ -13,8 +13,12 @@ import org.ikigaidigital.domain.policy.BasicInterestPolicy;
 import org.ikigaidigital.domain.policy.InterestPolicy;
 import org.ikigaidigital.domain.policy.PremiumInterestPolicy;
 import org.ikigaidigital.domain.policy.StudentInterestPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimeDepositCalculator {
+    private static final Logger log = LoggerFactory.getLogger(TimeDepositCalculator.class);
+
     private final Map<PlanType, InterestPolicy> policies;
 
     // The policies are listed here instead of being injected, so that new TimeDepositCalculator()
@@ -33,6 +37,11 @@ public class TimeDepositCalculator {
             Objects.requireNonNull(deposit.getPlanType(), "planType");
             Objects.requireNonNull(deposit.getBalance(), "balance");
 
+            if (deposit.getBalance() < 0) {
+                log.warn("Time deposit {} has a negative balance {}: interest is calculated on it as is",
+                        deposit.getId(), deposit.getBalance());
+            }
+
             double interest = roundToCents(monthlyInterest(deposit));
             deposit.setBalance(deposit.getBalance() + interest);
         }
@@ -42,6 +51,8 @@ public class TimeDepositCalculator {
         InterestPolicy policy = policies.get(PlanType.fromCode(deposit.getPlanType()));
         if (policy == null) {
             // An unknown plan code has no policy and earns nothing, as in the legacy code (A2).
+            log.warn("Time deposit {} has an unknown plan type '{}': no interest is accrued",
+                    deposit.getId(), deposit.getPlanType());
             return 0;
         }
         return policy.monthlyInterest(deposit);
