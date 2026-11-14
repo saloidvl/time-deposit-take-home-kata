@@ -14,14 +14,13 @@
         "/time-deposits/balance-updates": {
             "post": {
                 "tags": [
-                    "Time deposits"
+                    "time-deposit-controller"
                 ],
-                "summary": "Update the balance of all time deposits",
-                "description": "Accrues one month of interest on every eligible deposit according to its plan. Not idempotent: each call accrues one more month of interest on the new balance, so call it once a month.",
+                "summary": "Accrue one month of interest on all time deposits; not idempotent",
                 "operationId": "updateBalances",
                 "responses": {
                     "204": {
-                        "description": "Balances updated"
+                        "description": "No Content"
                     }
                 }
             }
@@ -29,14 +28,13 @@
         "/time-deposits": {
             "get": {
                 "tags": [
-                    "Time deposits"
+                    "time-deposit-controller"
                 ],
-                "summary": "Get all time deposits",
-                "description": "Returns every time deposit with its withdrawals. Deposits are ordered by id, withdrawals by date and then id.",
+                "summary": "Get all time deposits with their withdrawals",
                 "operationId": "getTimeDeposits",
                 "responses": {
                     "200": {
-                        "description": "All time deposits",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -65,17 +63,14 @@
                         "type": "string"
                     },
                     "balance": {
-                        "type": "number",
-                        "description": "Current balance; already reflects withdrawals"
+                        "type": "number"
                     },
                     "days": {
                         "type": "integer",
-                        "format": "int32",
-                        "description": "Age of the deposit in days; maintained outside this service"
+                        "format": "int32"
                     },
                     "withdrawals": {
                         "type": "array",
-                        "description": "Withdrawals made from this deposit",
                         "items": {
                             "$ref": "#/components/schemas/WithdrawalResponse"
                         }
