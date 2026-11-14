@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,13 +29,22 @@ public class TimeDepositCalculator {
 
     public void updateBalance(List<TimeDeposit> timeDeposits) {
         for (TimeDeposit deposit : timeDeposits) {
-            // An unknown plan code has no policy and earns nothing, as in the legacy code (A2).
-            InterestPolicy policy = policies.get(PlanType.fromCode(deposit.getPlanType()));
-            if (policy == null) continue;
+            // The legacy code failed on these nulls with an implicit NullPointerException; now it is explicit (A10).
+            Objects.requireNonNull(deposit.getPlanType(), "planType");
+            Objects.requireNonNull(deposit.getBalance(), "balance");
 
-            double interest = roundToCents(policy.monthlyInterest(deposit));
+            double interest = roundToCents(monthlyInterest(deposit));
             deposit.setBalance(deposit.getBalance() + interest);
         }
+    }
+
+    private double monthlyInterest(TimeDeposit deposit) {
+        InterestPolicy policy = policies.get(PlanType.fromCode(deposit.getPlanType()));
+        if (policy == null) {
+            // An unknown plan code has no policy and earns nothing, as in the legacy code (A2).
+            return 0;
+        }
+        return policy.monthlyInterest(deposit);
     }
 
     // The legacy rounding must be kept

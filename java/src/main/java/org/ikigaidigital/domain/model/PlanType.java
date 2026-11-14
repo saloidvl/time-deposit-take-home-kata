@@ -13,7 +13,6 @@ public enum PlanType {
     }
 
     // The match is exact and case-sensitive, as in the legacy code: "Basic" is not the basic plan (A2).
-    // A null code is treated like any other unknown code (A10).
     public static PlanType fromCode(String code) {
         for (PlanType type : values()) {
             if (type.code != null && type.code.equals(code)) {
