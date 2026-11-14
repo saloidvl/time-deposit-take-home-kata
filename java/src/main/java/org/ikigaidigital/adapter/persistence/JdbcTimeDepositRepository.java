@@ -28,6 +28,9 @@ class JdbcTimeDepositRepository implements TimeDepositRepository {
     private static final String UPDATE_BALANCE =
             "UPDATE \"timeDeposits\" SET balance = ? WHERE id = ?";
 
+    // Bounds one JDBC batch for a large number of deposits; all batches run in the caller's single transaction (D21).
+    private static final int BATCH_SIZE = 1000;
+
     private final JdbcTemplate jdbcTemplate;
 
     JdbcTimeDepositRepository(JdbcTemplate jdbcTemplate) {
@@ -51,7 +54,7 @@ class JdbcTimeDepositRepository implements TimeDepositRepository {
 
     @Override
     public void updateBalances(List<TimeDeposit> deposits) {
-        jdbcTemplate.batchUpdate(UPDATE_BALANCE, deposits, deposits.size(), this::setBalanceAndId);
+        jdbcTemplate.batchUpdate(UPDATE_BALANCE, deposits, BATCH_SIZE, this::setBalanceAndId);
     }
 
     private Map<Integer, List<Withdrawal>> findWithdrawalsByDepositId() {
