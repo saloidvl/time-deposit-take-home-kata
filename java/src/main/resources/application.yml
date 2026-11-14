@@ -9,4 +9,4 @@ spring:
     username: ${DB_USERNAME:timedeposit}
     password: ${DB_PASSWORD:timedeposit}
   liquibase:
-    change-log: classpath:db/changelog/changelog.sql
+    change-log: classpath:db/changelog/db.changelog-master.yaml
