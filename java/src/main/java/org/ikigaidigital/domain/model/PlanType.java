@@ -1,9 +1,5 @@
 package org.ikigaidigital.domain.model;
 
-/**
- * Plan codes only; rates and day windows live in the interest policies.
- * The enum selects a policy and is never stored: a deposit keeps its original code text.
- */
 public enum PlanType {
     BASIC("basic"),
     STUDENT("student"),
@@ -16,10 +12,10 @@ public enum PlanType {
         this.code = code;
     }
 
-    /** Never throws; any code that is not matched exactly, including null, gives {@link #UNKNOWN}. */
+    // The match is exact and case-sensitive, as in the legacy code: "Basic" is not the basic plan (A2).
+    // A null code is treated like any other unknown code (A10).
     public static PlanType fromCode(String code) {
         for (PlanType type : values()) {
-            // Plan codes are matched exactly and case-sensitively; null (A10) and unrecognised codes are UNKNOWN (A2).
             if (type.code != null && type.code.equals(code)) {
                 return type;
             }

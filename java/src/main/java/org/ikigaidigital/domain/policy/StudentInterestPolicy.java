@@ -5,6 +5,10 @@ import org.ikigaidigital.domain.model.PlanType;
 
 public final class StudentInterestPolicy implements InterestPolicy {
 
+    private static final int GRACE_PERIOD_DAYS = 30;
+    private static final int FIRST_DAY_WITHOUT_INTEREST = 366;
+    private static final double ANNUAL_RATE = 0.03;
+
     @Override
     public PlanType planType() {
         return PlanType.STUDENT;
@@ -12,9 +16,8 @@ public final class StudentInterestPolicy implements InterestPolicy {
 
     @Override
     public double monthlyInterest(TimeDeposit deposit) {
-        // Student earns interest after the 30-day grace period and only until day 365 (A8).
-        if (deposit.getDays() > 30 && deposit.getDays() < 366) {
-            return deposit.getBalance() * 0.03 / 12;
+        if (deposit.getDays() > GRACE_PERIOD_DAYS && deposit.getDays() < FIRST_DAY_WITHOUT_INTEREST) {
+            return deposit.getBalance() * ANNUAL_RATE / MONTHS_IN_YEAR;
         }
         return 0;
     }
