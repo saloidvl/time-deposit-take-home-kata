@@ -1,0 +1,115 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "XA Bank Time Deposits API",
+        "description": "Reads time deposits and runs the monthly balance update.",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "paths": {
+        "/time-deposits/balance-updates": {
+            "post": {
+                "tags": [
+                    "Time deposits"
+                ],
+                "summary": "Update the balance of all time deposits",
+                "description": "Accrues one month of interest on every eligible deposit according to its plan. Not idempotent: each call accrues one more month of interest on the new balance, so call it once a month.",
+                "operationId": "updateBalances",
+                "responses": {
+                    "204": {
+                        "description": "Balances updated"
+                    }
+                }
+            }
+        },
+        "/time-deposits": {
+            "get": {
+                "tags": [
+                    "Time deposits"
+                ],
+                "summary": "Get all time deposits",
+                "description": "Returns every time deposit with its withdrawals. Deposits are ordered by id, withdrawals by date and then id.",
+                "operationId": "getTimeDeposits",
+                "responses": {
+                    "200": {
+                        "description": "All time deposits",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TimeDepositResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "TimeDepositResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "planType": {
+                        "type": "string"
+                    },
+                    "balance": {
+                        "type": "number",
+                        "description": "Current balance; already reflects withdrawals"
+                    },
+                    "days": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Age of the deposit in days; maintained outside this service"
+                    },
+                    "withdrawals": {
+                        "type": "array",
+                        "description": "Withdrawals made from this deposit",
+                        "items": {
+                            "$ref": "#/components/schemas/WithdrawalResponse"
+                        }
+                    }
+                },
+                "required": [
+                    "balance",
+                    "days",
+                    "id",
+                    "planType",
+                    "withdrawals"
+                ]
+            },
+            "WithdrawalResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "required": [
+                    "amount",
+                    "date",
+                    "id"
+                ]
+            }
+        }
+    }
+}
